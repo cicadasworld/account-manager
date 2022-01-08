@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>异步查询所有账户</title>
+  <script src="../../js/jquery-3.6.0.min.js"></script>
+  <script src="../../js/getParameter.js"></script>
+</head>
+<body>
+<h1>异步查询所有账户</h1>
+<div style="color: red" id="errorMessage"></div>
+<table id="accountListTable">
+  <thead>
+  <tr>
+    <th>编号</th>
+    <th>账号名</th>
+    <th>账号余额</th>
+    <th>账号状态</th>
+    <th>账号创建时间</th>
+    <th>账号修改时间</th>
+    <th>操作</th>
+  </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+  <tfoot>
+  <tr id="pageInfo"></tr>
+  </tfoot>
+</table>
+<div>
+  <a href="account_add.html" target="_blank">添加账号</a>
+</div>
+<script>
+  let pageNo = parseInt(getParameter("pageNo"))
+  let pageSize = parseInt(getParameter("pageSize"))
+  let method = getParameter("method")
+  let requestParameter = "method=" + method + "&pageNo=" + pageNo + "&pageSize=" + pageSize
+  $.post("../../async/account", requestParameter, function (result) {
+    // 服务器没有异常
+    if (result.flag) {
+      let pageBean = result.data
+      let accountList = pageBean.dataList
+      $.each(accountList, function (index, account) {
+        let status = ""
+        if (account.status == 1) {
+          status = "启用"
+        } else {
+          status = "禁用"
+        }
+        $("tbody").append(
+          "<tr>" +
+          "  <td>" + (index + 1) + "</td>" +
+          "  <td>" + account.name + "</td>" +
+          "  <td>" + account.balance + "</td>" +
+          "  <td>" + status + "</td>" +
+          "  <td>" + account.createDate + "</td>" +
+          "  <td>" + account.updateDate + "</td>" +
+          "  <td>" +
+          "    <a href=\"#\" onclick=\"deleteAccountById('" + account.id + "', '" + account.name + "')\">删除</a>" +
+          "    <a href=\"#\" onclick=\"toUpdateAccountPage('" + account.id + " ')\">修改</a>" +
+          "  </td>" +
+          "</tr>")
+      })
+      // 总条数
+      let totalCount = pageBean.totalCount
+      // 总页数
+      let totalPage = pageBean.totalPage
+      // 当前页码
+      pageNo = pageBean.pageNo
+      $("tfoot").append("<tr><td>总条数" + totalCount + ", 每页条数" + pageSize + "</td></tr>")
+
+      // 显示上一页
+      if (pageNo > 1) { // 当前页大于1才显示上一页
+        $("#pageInfo").append("<a href=\"account_list_page.html?method=findAccountByPage&pageNo=" + (pageNo - 1) + "&pageSize=" + pageSize + "\">上一页</a>")
+      }
+      // 显示页码
+      for (let i = 1; i <= totalPage; i++) {
+        // 判断是否是当前页
+        if (pageNo == i) {
+          $("#pageInfo").append("<a href=\"#\" style=\"color: red\">" + i + "</a>")
+        } else {
+          $("#pageInfo").append("<a href=\"account_list_page.html?method=findAccountByPage&pageNo=" + i + "&pageSize=" + pageSize + "\">" + i + "</a>")
+        }
+      }
+      // 显示下一页
+      if (pageNo < totalPage) {
+        $("#pageInfo").append("<a href=\"account_list_page.html?method=findAccountByPage&pageNo=" + (pageNo + 1) + "&pageSize=" + pageSize + "\">下一页</a>")
+      }
+    } else {
+      // 服务器有异常
+      $("#errorMessage").html("服务器异常")
+    }
+  }, "json")
+
+  function deleteAccountById(id, name) {
+    let flag = confirm("确认要删除" + name + "吗？")
+    if (flag) {
+      $.post("../../async/account", "method=deleteAccountById&id=" + id, function (result) {
+        // 服务器没有异常
+        if (result.flag) {
+          if (result.data) {
+            alert("删除成功")
+            // 删除成功跳转到账户列表页面
+            location.href = "account_list.html"
+          }
+        } else {
+          alert("删除失败")
+        }
+      }, "json")
+    }
+  }
+
+  function toUpdateAccountPage(id) {
+    location.href = "account_update.html?id=" + id
+  }
+</script>
+</body>
+</html>

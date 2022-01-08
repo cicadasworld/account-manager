@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue+Axios改造查询所有账户</title>
+  <script src="../../js/vue.min.js"></script>
+  <script src="../../js/axios.min.js"></script>
+</head>
+<body>
+<h1>Vue+Axios改造查询所有账户</h1>
+<div id="app">
+  <div style="color: red" v-html="errorMessage"></div>
+  <table>
+    <thead>
+      <tr>
+        <th>编号</th>
+        <th>账号名</th>
+        <th>账号余额</th>
+        <th>账号状态</th>
+        <th>账号创建时间</th>
+        <th>账号修改时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(account, index) in accountVOList">
+        <td v-html="index + 1"></td>
+        <td v-html="account.name"></td>
+        <td v-html="account.balance"></td>
+        <td v-html="account.status==1?'启用':'禁用'"></td>
+        <td v-html="account.createDate"></td>
+        <td v-html="account.updateDate"></td>
+        <td><a href="#" @click="axiosDeleteAccountById(account.id, account.name)">删除</a>
+          <a v-bind:href="'vue_axios_account_update.html?id=' + account.id">修改</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <div>
+    <a href="vue_axios_account_add.html" target="_blank">添加账号</a>
+  </div>
+</div>
+<script>
+  new Vue({
+    el: "#app",
+    data: {
+      accountVOList: [],
+      errorMessage: ""
+    },
+    methods: {
+      axiosFindAllAccount() {
+        axios.post("../../async/account?method=findAllAccount").then(response => {
+          if (response.data.flag) {
+            this.accountVOList = response.data.data
+          } else {
+            this.errorMessage = "服务器异常"
+          }
+        }).catch(error => {
+          console.log("异常信息: " + error)
+          this.errorMessage = "服务器异常"
+        })
+      },
+      axiosDeleteAccountById(id, name) {
+        let flag = confirm("确认要删除" + name + "吗？")
+        if (flag) {
+          axios.post("../../async/account?method=deleteAccountById&id=" + id).then(response => {
+            if (response.data.flag) {
+              alert("删除成功")
+              // 删除成功跳转到账户列表页面
+              location.href = "vue_axios_account_list.html"
+            } else {
+              this.errorMessage = "账户删除失败"
+            }
+          }).catch(error => {
+            console.log("异常信息: " + error)
+            this.errorMessage = "服务器异常"
+          })
+        }
+      }
+    },
+    created() {
+      this.axiosFindAllAccount()
+    }
+  })
+</script>
+</body>
+</html>

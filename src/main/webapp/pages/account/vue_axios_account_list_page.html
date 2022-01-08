@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vue+Axios改造分页查询账户</title>
+  <script src="../../js/getParameter.js"></script>
+  <script src="../../js/vue.min.js"></script>
+  <script src="../../js/axios.min.js"></script>
+</head>
+<body>
+<h1>Vue+Axios改造分页查询账户</h1>
+<div id="app">
+  <div style="color: red" v-html="errorMessage"></div>
+  <table>
+    <thead>
+    <tr>
+      <th>编号</th>
+      <th>账号名</th>
+      <th>账号余额</th>
+      <th>账号状态</th>
+      <th>账号创建时间</th>
+      <th>账号修改时间</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="(account, index) in pageBean.dataList">
+      <td v-html="index + 1"></td>
+      <td v-html="account.name"></td>
+      <td v-html="account.balance"></td>
+      <td v-html="account.status==1?'启用':'禁用'"></td>
+      <td v-html="account.createDate"></td>
+      <td v-html="account.updateDate"></td>
+      <td><a href="#" @click="axiosDeleteAccountById(account.id, account.name)">删除</a>
+        <a v-bind:href="'vue_axios_account_update.html?id=' + account.id">修改</a>
+      </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+      <td v-show="previous"><a
+        v-bind:href="'vue_axios_account_list_page.html?method=findAccountByPage&pageNo=' + (pageBean.pageNo - 1) + '&pageSize=' + pageBean.pageSize">上一页</a>
+      </td>
+      <td>
+        <span v-for="(pageNo, index) in pageBean.totalPage">
+          <a v-html="currentPageNo == pageNo ? redPageNo : pageNo"
+             v-bind:href="'vue_axios_account_list_page.html?method=findAccountByPage&pageNo=' + pageNo + '&pageSize=' + pageBean.pageSize"></a>
+        </span>
+      </td>
+      <td v-show="next"><a
+        v-bind:href="'vue_axios_account_list_page.html?method=findAccountByPage&pageNo=' + (pageBean.pageNo + 1) + '&pageSize=' + pageBean.pageSize">下一页</a>
+      </td>
+    </tr>
+    <!-- 总条数和每页显示的条数 -->
+    <tr>
+      <td v-html="'总条数' + pageBean.totalCount + ', '"></td>
+      <td v-html="'每页条数' + pageBean.pageSize"></td>
+    </tr>
+    </tfoot>
+  </table>
+  <div>
+    <a href="vue_axios_account_add.html" target="_blank">添加账号</a>
+  </div>
+</div>
+<script>
+  let pageNo = parseInt(getParameter("pageNo"))
+  let pageSize = parseInt(getParameter("pageSize"))
+
+  new Vue({
+    el: "#app",
+    data: {
+      pageBean: {},
+      previous: true,
+      next: true,
+      currentPageNo: pageNo,
+      redPageNo: "<span style='color:red'>" + pageNo + "</span>",
+      errorMessage: ""
+    },
+    methods: {
+      findAccountByPage() {
+        axios.post("../../async/account?method=findAccountByPage&pageNo=" + pageNo + "&pageSize=" + pageSize)
+          .then(response => {
+            if (response.data.flag) {
+              this.pageBean = response.data.data
+
+              // 判断是否显示上一页
+              if (this.pageBean.pageNo > 1) {
+                this.previous = true
+              } else {
+                this.previous = false
+              }
+
+              // 判断是否显示下一页
+              if (this.pageBean.pageNo < this.pageBean.totalPage) {
+                this.next = true
+              } else {
+                this.next = false
+              }
+            }
+          }).catch(error => {
+          console.log("异常信息: " + error)
+          this.errorMessage = "服务器异常"
+        })
+      }
+    },
+    created() {
+      this.findAccountByPage()
+    }
+  })
+</script>
+</body>
+</html>

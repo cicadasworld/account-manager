@@ -192,7 +192,7 @@ public class AsyncAccountServlet extends BaseServlet {
         ResponseBean<PageBean<AccountVO>> responseBean = new ResponseBean<>(Boolean.TRUE);
         try {
             Long pageNo = Long.valueOf(request.getParameter("pageNo"));
-            Integer pageSize = Integer.valueOf(request.getParameter("pageSize"));
+            Long pageSize = Long.valueOf(request.getParameter("pageSize"));
             PageBean<AccountVO> pageBean = accountService.findByPage(pageNo, pageSize);
             if (pageBean != null && pageBean.getDataList() != null && !pageBean.getDataList().isEmpty()) {
                 responseBean.setData(pageBean);

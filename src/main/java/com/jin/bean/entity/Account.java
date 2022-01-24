@@ -1,5 +1,6 @@
 package com.jin.bean.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
  * @author hujin
  * @version 2021/10/31
  */
-public class Account {
+public class Account implements Serializable {
 
     private Long id;
     private String name;

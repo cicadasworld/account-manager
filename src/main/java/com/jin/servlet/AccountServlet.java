@@ -155,7 +155,7 @@ public class AccountServlet extends BaseServlet {
 
     public void findAccountByPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long pageNo = Long.valueOf(request.getParameter("pageNo"));
-        Integer pageSize = Integer.valueOf(request.getParameter("pageSize"));
+        Long pageSize = Long.valueOf(request.getParameter("pageSize"));
         PageBean<AccountVO> pageBean = accountService.findByPage(pageNo, pageSize);
         if (pageBean != null && pageBean.getDataList() != null && !pageBean.getDataList().isEmpty()) {
             request.setAttribute("pageBean", pageBean);

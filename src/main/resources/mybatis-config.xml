@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 从类路径加载jdbc.properties文件 -->
+    <properties resource="jdbc.properties"/>
+    <settings>
+        <!-- 经典数据库下划线列名到驼峰对象名的映射-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 默认即已开启二级缓存（同一SqlSessionFactory产生的SqlSession之间数据共享） -->
+        <!-- <setting name="cacheEnabled" value="true"/> -->
+    </settings>
+    <typeAliases>
+        <!-- 扫描包下的类名作为类型别名 -->
+        <package name="com.jin.bean"/>
+    </typeAliases>
+    <environments default="dev">
+        <environment id="dev">
+            <!-- Spring项目会替换成Spring的声明事务 -->
+            <transactionManager type="JDBC"/>
+            <!-- 数据源配置信息，指定POOLED表示是Mybatis内置连接池 -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <!-- 扫描类路径下包下的映射文件 -->
+        <package name="com.jin.mapper"/>
+    </mappers>
+</configuration>

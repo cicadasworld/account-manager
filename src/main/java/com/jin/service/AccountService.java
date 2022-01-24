@@ -22,5 +22,5 @@ public interface AccountService {
 
     boolean update(Account account);
 
-    PageBean<AccountVO> findByPage(Long pageNo, Integer pageSize);
+    PageBean<AccountVO> findByPage(Long pageNo, Long pageSize);
 }

@@ -118,7 +118,7 @@ public class AccountDaoTest {
     @Test
     public void testSelectByPage() {
         try {
-            List<Account> accounts = accountDao.selectByPage(1L, 2);
+            List<Account> accounts = accountDao.selectByPage(1L, 2L);
             Assert.assertEquals(accounts.size(), 2);
             for (Account account : accounts) {
                 System.out.println(account);
@@ -133,7 +133,7 @@ public class AccountDaoTest {
         Account accountCondition = new Account();
         accountCondition.setStatus(1);
         try {
-            List<Account> accounts = accountDao.selectByPage(1L, 2, accountCondition);
+            List<Account> accounts = accountDao.selectByPage(1L, 2L, accountCondition);
             Assert.assertEquals(accounts.size(), 2);
             for (Account account : accounts) {
                 System.out.println(account);

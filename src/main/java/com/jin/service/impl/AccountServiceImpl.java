@@ -95,7 +95,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public PageBean<AccountVO> findByPage(Long pageNo, Integer pageSize) {
+    public PageBean<AccountVO> findByPage(Long pageNo, Long pageSize) {
         PageBean<AccountVO> pageBean = new PageBean<>();
         try {
             Long totalCount = accountDao.selectTotalCount();

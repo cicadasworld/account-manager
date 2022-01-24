@@ -23,7 +23,7 @@ public interface AccountDao {
 
     Long selectTotalCount() throws SQLException;
 
-    List<Account> selectByPage(Long pageNo, Integer pageSize) throws Exception;
+    List<Account> selectByPage(Long pageNo, Long pageSize) throws Exception;
 
-    List<Account> selectByPage(Long pageNo, Integer pageSize, Account accountCondition) throws Exception;
+    List<Account> selectByPage(Long pageNo, Long pageSize, Account accountCondition) throws Exception;
 }

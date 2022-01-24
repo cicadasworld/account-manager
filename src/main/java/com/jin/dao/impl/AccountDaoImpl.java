@@ -101,7 +101,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public List<Account> selectByPage(Long pageNo, Integer pageSize) throws Exception {
+    public List<Account> selectByPage(Long pageNo, Long pageSize) throws Exception {
         // select 列名 from 表名 [where 条件] limit (pageNo-1)*pageSize, pageSize
         String sql = "select id, name, balance, status, create_date, update_date from jdbc_account limit ?, ?";
         List<Account> accounts = queryRunner.query(sql, new AccountHandler(), (pageNo - 1) * pageSize, pageSize);
@@ -112,7 +112,7 @@ public class AccountDaoImpl implements AccountDao {
     }
 
     @Override
-    public List<Account> selectByPage(Long pageNo, Integer pageSize, Account accountCondition) throws Exception {
+    public List<Account> selectByPage(Long pageNo, Long pageSize, Account accountCondition) throws Exception {
         if (accountCondition != null && accountCondition.getStatus() != null) {
             String sql = "select id, name, balance, status, create_date, update_date from jdbc_account where status = ? limit ?, ?";
             List<Account> accounts = queryRunner.query(sql, new AccountHandler(),

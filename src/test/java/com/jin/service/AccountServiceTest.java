@@ -78,7 +78,7 @@ public class AccountServiceTest {
 
     @Test
     public void testFindByPage() {
-        PageBean<AccountVO> pageBean = accountService.findByPage(1L, 2);
+        PageBean<AccountVO> pageBean = accountService.findByPage(1L, 2L);
         System.out.println(pageBean);
     }
 }

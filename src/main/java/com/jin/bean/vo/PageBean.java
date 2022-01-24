@@ -15,7 +15,7 @@ public class PageBean<T> {
     private List<T> dataList;
 
     /** 每页条数 */
-    private Integer pageSize;
+    private Long pageSize;
 
     /** 总页数 */
     private Long totalPage;
@@ -39,11 +39,11 @@ public class PageBean<T> {
         this.dataList = dataList;
     }
 
-    public Integer getPageSize() {
+    public Long getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(Integer pageSize) {
+    public void setPageSize(Long pageSize) {
         this.pageSize = pageSize;
     }
 

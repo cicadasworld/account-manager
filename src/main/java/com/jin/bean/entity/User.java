@@ -1,35 +1,23 @@
 package com.jin.bean.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author hujin
- * @version 2021/10/31
+ * @version 2022/1/28
  */
-public class Account implements Serializable {
-
+public class User implements Serializable {
     private Long id;
     private String name;
-    private BigDecimal balance;
-    private Integer status;
+    private String password;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 
-    private User user;
+    private List<Account> accounts;
 
-    public Account() {
-    }
-
-    public Account(Long id, String name, BigDecimal balance, Integer status, LocalDateTime createDate, LocalDateTime updateDate) {
-        this.id = id;
-        this.name = name;
-        this.balance = balance;
-        this.status = status;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
-    }
+    private List<Role> roles;
 
     public Long getId() {
         return id;
@@ -47,20 +35,12 @@ public class Account implements Serializable {
         this.name = name;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
+    public String getPassword() {
+        return password;
     }
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public LocalDateTime getCreateDate() {
@@ -79,24 +59,32 @@ public class Account implements Serializable {
         this.updateDate = updateDate;
     }
 
-    public User getUser() {
-        return user;
+    public List<Account> getAccounts() {
+        return accounts;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
     public String toString() {
-        return "Account{" +
+        return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", balance=" + balance +
-                ", status=" + status +
+                ", password='" + password + '\'' +
                 ", createDate=" + createDate +
                 ", updateDate=" + updateDate +
-                ", user=" + user +
+                ", accounts=" + accounts +
+                ", roles=" + roles +
                 '}';
     }
 }

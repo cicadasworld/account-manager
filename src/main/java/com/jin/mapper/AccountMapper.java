@@ -74,4 +74,25 @@ public interface AccountMapper {
      * @return 受影响的行数
      */
     int deleteByIds(List<Long> ids);
+
+    /**
+     * 根据指定的账户Id查询账户以及关联的用户信息
+     * @param accountId 账户Id
+     * @return 账户以及关联的用户信息
+     */
+    Account selectAccountUserByAccountId(Long accountId);
+
+    /**
+     * 根据指定的账户Id查询账户以及延迟加载关联的用户信息
+     * @param accountId 账户Id
+     * @return 账户以及关联的用户信息
+     */
+    Account selectAccountUserLazyLoadByAccountId(Long accountId);
+
+    /**
+     * 根据用户Id查询账户列表
+     * @param userId 用户Id
+     * @return 账户列表
+     */
+    List<Account> selectByUserId(Long userId);
 }

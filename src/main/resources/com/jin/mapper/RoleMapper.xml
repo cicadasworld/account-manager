@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jin.mapper.RoleMapper">
+    <!--  一对多外层不能用autoMapping属性  -->
+    <resultMap id="roleUserResultMap" type="Role">
+        <id property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleDesc" column="role_desc"/>
+        <collection property="users" ofType="User" autoMapping="true"/>
+    </resultMap>
+    <select id="selectRoleUserByRoleId" parameterType="long" resultMap="roleUserResultMap">
+        select user.id,
+               user.name,
+               user.password,
+               user.create_date,
+               user.update_date,
+               role.role_id,
+               role.role_name,
+               role.role_desc
+        from jdbc_role role,
+             jdbc_user_role user_role,
+             jdbc_user user
+        where role.role_id = user_role.role_id and user.id = user_role.user_id and role.role_id = #{roleId};
+    </select>
+</mapper>

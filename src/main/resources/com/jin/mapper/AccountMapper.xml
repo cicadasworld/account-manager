@@ -81,9 +81,64 @@
         delete
         from jdbc_account
         where id in (
-            <foreach collection="list" item="id" separator=",">
-                #{id}
-            </foreach>
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
         );
     </delete>
+
+    <!--  设计数据库时应遵循表名以数据库名为前缀，如表名jdbc_role，列名以表名为前缀，如列名role_id  -->
+    <!--  当对象的属性名和列名一致时，可以采用自动映射  -->
+    <resultMap id="accountUserResultMap" type="Account" autoMapping="true">
+        <!--        <id property="id" column="id"/>-->
+        <result property="name" column="accountName"/>
+        <!--        <result property="status" column="status"/>-->
+        <!--        <result property="balance" column="balance"/>-->
+        <result property="createDate" column="accountCreateDate"/>
+        <result property="updateDate" column="accountUpdateDate"/>
+        <association property="user" javaType="User" autoMapping="true">
+            <!--            <id property="id" column="id"/>-->
+            <!--            <result property="name" column="name"/>-->
+            <!--            <result property="password" column="password"/>-->
+            <!--            <result property="createDate" column="create_date"/>-->
+            <!--            <result property="updateDate" column="update_date"/>-->
+        </association>
+    </resultMap>
+
+    <select id="selectAccountUserByAccountId" parameterType="long" resultMap="accountUserResultMap">
+        select account.id,
+               account.name        as accountName,
+               account.status,
+               account.balance,
+               account.create_date as accountCreateDate,
+               account.update_date as accountUpdateDate,
+               user.id,
+               user.name,
+               user.password,
+               user.create_date,
+               user.update_date
+        from jdbc_account account,
+             jdbc_user user
+        where account.user_id = user.id and account.id = #{accountId};
+    </select>
+
+    <resultMap id="accountUserLazyLoadResultMap" type="Account" autoMapping="true">
+        <!--  当在mybatis-config.xml中设置了全局的lazyLoadingEnabled为true，则不需要单独添加属性fetchType="lazy" -->
+        <association property="user"
+                     autoMapping="true"
+                     select="com.jin.mapper.UserMapper.selectById"
+                     column="user_id"/>
+    </resultMap>
+
+    <select id="selectAccountUserLazyLoadByAccountId" parameterType="long" resultMap="accountUserLazyLoadResultMap">
+        select id, name, balance, status, create_date, update_date, user_id
+        from jdbc_account
+        where id = #{id}
+    </select>
+
+    <select id="selectByUserId" parameterType="long" resultType="Account">
+        select id, name, balance, status, create_date, update_date, user_id
+        from jdbc_account
+        where user_id = #{userId}
+    </select>
 </mapper>

@@ -122,7 +122,7 @@ public class AccountMapperTest {
     }
 
     @Test
-    public void deleteByIds() {
+    public void testDeleteByIds() {
         try (SqlSession sqlSession = SqlSessionUtil.openSqlSession()) {
             AccountMapper mapper = sqlSession.getMapper(AccountMapper.class);
             List<Long> ids = Arrays.asList(10L, 11L, 12L);
@@ -131,6 +131,34 @@ public class AccountMapperTest {
                 sqlSession.commit();
                 assertEquals(deleteRow, 3);
             }
+        }
+    }
+
+    @Test
+    public void testSelectAccountUserByAccountId() {
+        try (SqlSession sqlSession = SqlSessionUtil.openSqlSession()) {
+            AccountMapper mapper = sqlSession.getMapper(AccountMapper.class);
+            Account account = mapper.selectAccountUserByAccountId(1L);
+            assertEquals(account.getName(), "Tony");
+        }
+    }
+
+    @Test
+    public void testSelectAccountUserLazyLoadByAccountId() {
+        try (SqlSession sqlSession = SqlSessionUtil.openSqlSession()) {
+            AccountMapper mapper = sqlSession.getMapper(AccountMapper.class);
+            Account account = mapper.selectAccountUserLazyLoadByAccountId(1L);
+            assertEquals(account.getName(), "Tony");
+//            assertEquals(account.getUser().getName(), "admin");
+        }
+    }
+
+    @Test
+    public void testSelectByUserId() {
+        try (SqlSession sqlSession = SqlSessionUtil.openSqlSession()) {
+            AccountMapper mapper = sqlSession.getMapper(AccountMapper.class);
+            List<Account> accounts = mapper.selectByUserId(1L);
+            assertEquals(accounts.size(), 3);
         }
     }
 }
